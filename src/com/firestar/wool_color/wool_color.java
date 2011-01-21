@@ -35,6 +35,7 @@ public class wool_color extends JavaPlugin{
 		Byte data = null;
 		String s= String.valueOf(color_to_num(color));
 		data = Byte.valueOf(s);
+		player.getInventory().all(35);
 		for (int i = 0; i < amount; i++){
 			player.getInventory().addItem(new ItemStack(35, (int) 64, (byte)0, data));
 		}
@@ -44,17 +45,17 @@ public class wool_color extends JavaPlugin{
 		if(player.isOp()){
 	        String commandName = command.getName().toLowerCase();
 	        if(commandName.equalsIgnoreCase("gw")){
-	        	if(args[1].equalsIgnoreCase("list")){
+	        	if(args[0].equalsIgnoreCase("list")){
 	        		String mi="";
 	        		for ( Map.Entry<String, Integer> entry : colors.entrySet() ){
 						String key = entry.getKey();
-						mi=mi+key+", ";
+						mi=mi+key+",";
 					}
 	        		player.sendMessage(mi);
+	        	}else if(args.length==1){
+	        		give_wool(player,args[0],1);
 	        	}else if(args.length==2){
-	        		give_wool(player,args[1],1);
-	        	}else if(args.length==3){
-	        		give_wool(player,args[1],Integer.valueOf(args[2]));
+	        		give_wool(player,args[0],Integer.valueOf(args[1]));
 	        	}else{
 	        		give_wool(player,"white",1);
 	        	}
