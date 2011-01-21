@@ -45,15 +45,17 @@ public class wool_color extends JavaPlugin{
 		if(player.isOp()){
 	        String commandName = command.getName().toLowerCase();
 	        if(commandName.equalsIgnoreCase("gw")){
-	        	if(args[0].equalsIgnoreCase("list")){
-	        		String mi="";
-	        		for ( Map.Entry<String, Integer> entry : colors.entrySet() ){
-						String key = entry.getKey();
-						mi=mi+key+",";
-					}
-	        		player.sendMessage(mi);
-	        	}else if(args.length==1){
-	        		give_wool(player,args[0],1);
+	        	if(args.length==1){
+	        		if(args[0].equalsIgnoreCase("list")){
+		        		String mi="";
+		        		for ( Map.Entry<String, Integer> entry : colors.entrySet() ){
+							String key = entry.getKey();
+							mi=mi+key+",";
+						}
+		        		player.sendMessage(mi);
+	        		}else{
+	        			give_wool(player,args[0],1);
+	        		}
 	        	}else if(args.length==2){
 	        		give_wool(player,args[0],Integer.valueOf(args[1]));
 	        	}else{
