@@ -3,6 +3,7 @@ package com.firestar.wool_color;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.regex.PatternSyntaxException;
 import java.io.*;
 
 import org.bukkit.Server;
@@ -29,7 +30,14 @@ public class wool_color extends JavaPlugin{
 		if(colors.containsKey(s)){
 			return colors.get(s);
 		}
-		return Integer.valueOf(s);
+		try {
+			if (s.matches("(?si)([0-9]+)")) {
+				return Integer.valueOf(s);
+			} else {
+			} 
+		} catch (PatternSyntaxException ex) {
+		}
+		return 0;
 	}
 	public void give_wool(Player player, String color, Integer amount){
 		Byte data = null;
