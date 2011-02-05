@@ -1,6 +1,6 @@
 name: Wool Color Giver
 main: com.firestar.wool_color.wool_color
-version: 0.1
+version: 0.2
 commands:
   gw:
     description: Give Wool

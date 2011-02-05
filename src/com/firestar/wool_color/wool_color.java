@@ -4,15 +4,24 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.PatternSyntaxException;
+import java.awt.Color;
 import java.io.*;
 
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
+import org.bukkit.material.Wool;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 
 /**
@@ -20,11 +29,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 */
 
 public class wool_color extends JavaPlugin{
+	public static Permissions Permissions = null;
 	protected static final Logger log = Logger.getLogger("Minecraft");
 	public Hashtable<String,Integer> colors= new Hashtable<String,Integer>();
 	public wool_color(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File  folder, File plugin, ClassLoader cLoader) {
         super(pluginLoader, instance, desc, folder, plugin, cLoader);
-        System.out.println(desc.getName() + " version " + desc.getVersion() + " initialized");
+        log(desc.getName() + " version " + desc.getVersion() + " initialized");
     }
 	public int color_to_num(String s){
 		if(colors.containsKey(s)){
@@ -39,18 +49,54 @@ public class wool_color extends JavaPlugin{
 		}
 		return 0;
 	}
-	public void give_wool(Player player, String color, Integer amount){
-		Byte data = null;
-		String s= String.valueOf(color_to_num(color));
-		data = Byte.valueOf(s);
-		player.getInventory().all(35);
-		for (int i = 0; i < amount; i++){
-			player.getInventory().addItem(new ItemStack(35, (int) 64, (byte)0, data));
+	public void setupPermissions() {
+		Plugin test = getServer().getPluginManager().getPlugin("Permissions");
+		if(Permissions == null) {
+		    if(test != null) {
+		    	Permissions = (Permissions)test;
+		    	log("Permissions plugin found, switching to its permissions");
+		    } else {
+		    	log("Permissions plugin not found, switching to Ops only mode.");
+		    }
 		}
-		player.sendMessage("giving yourself "+(amount*64)+" "+color+" wool");
 	}
-	public boolean onCommand(Player player, Command command, String commandLabel, String[] args) {
-		if(player.isOp()){
+	public boolean is_allowed(Player player){
+		if(Permissions != null) {
+			if(Permissions.Security.permission(player, "woolcolor.spawn")){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			if(player.isOp()){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+	public void log(String msg){
+		log.info("Wool_Color_Spawner: " + msg);
+	}
+	public void give_wool(Player player, String color, Integer amount){
+		try{
+			Byte data = (byte) Byte.valueOf(String.valueOf(color_to_num(color)));
+			short f = 0;
+			ItemStack item=new ItemStack(Material.WOOL,64, f, data);
+			for (int i = 0; i < amount; i++){
+				player.getInventory().addItem(item);
+			}
+			player.sendMessage("giving yourself "+(amount*64)+" "+color+" wool");
+			log(player.getName()+" gave "+(amount*64)+" "+color+" wool");
+		} catch (Exception e) {
+		}
+	}
+	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+		Player player = null;
+		if(sender instanceof Player){
+			player = (Player) sender;
+		}
+		if(is_allowed(player)){
 	        String commandName = command.getName().toLowerCase();
 	        if(commandName.equalsIgnoreCase("gw")){
 	        	if(args.length==1){
@@ -58,7 +104,7 @@ public class wool_color extends JavaPlugin{
 		        		String mi="";
 		        		for ( Map.Entry<String, Integer> entry : colors.entrySet() ){
 							String key = entry.getKey();
-							mi=mi+key+",";
+							mi=mi+key+", ";
 						}
 		        		player.sendMessage(mi);
 	        		}else{
@@ -71,12 +117,15 @@ public class wool_color extends JavaPlugin{
 	        	}
 	        	return true;
 	        }
+		}else{
+			player.sendMessage(ChatColor.YELLOW+"Insufficient permissions!");
 		}
-        return false;
+        return true;
     }
 	public void onEnable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
-		System.out.println( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
+		log( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
+		setupPermissions();
 		colors.put("orange",1);
 		colors.put("white",0);
 		colors.put("magenta",2);
@@ -95,5 +144,7 @@ public class wool_color extends JavaPlugin{
 		colors.put("black",15);
 	}
 	public void onDisable() {
+		PluginDescriptionFile pdfFile = this.getDescription();
+		log( pdfFile.getName() + " version " + pdfFile.getVersion() + " disabled!" );
 	}
 }
