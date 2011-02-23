@@ -2,7 +2,9 @@ Wool Color v0.3
 by firestar
 -------------------
 
-Install Guide
+USAGE
+/gw <color> <number of stacks> - Give wool
+/gw list - List color names
 
-1) Place WoolColor.jar in your CraftBukkit plugins directory
-2) (Re)start your server!
+Requires the Permissions plugin.
+The permission node is 'woolgiver.spawn'.

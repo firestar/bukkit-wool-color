@@ -3,18 +3,15 @@ package com.firestar.WoolGiver;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Logger;
-import java.io.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nijiko.permissions.PermissionHandler;
@@ -30,10 +27,6 @@ public class WoolGiver extends JavaPlugin{
 	public static PermissionHandler PERMISSIONS = null;
 	private PluginDescriptionFile pdfFile = null;
 	
-	public WoolGiver(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File  folder, File plugin, ClassLoader cLoader) {
-        super(pluginLoader, instance, desc, folder, plugin, cLoader);
-    }
-	
 	public void obtainPermissions() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
 		if (test != null) {
@@ -47,7 +40,7 @@ public class WoolGiver extends JavaPlugin{
 	
 	public boolean isAllowed(Player player){
 		if(PERMISSIONS != null) {
-			return PERMISSIONS.has(player, "woolcolor.spawn");
+			return PERMISSIONS.has(player, "woolgiver.spawn");
 		} else return false;
 	}
 	
