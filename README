@@ -1,0 +1,10 @@
+Wool Color v0.3
+by firestar
+-------------------
+
+USAGE
+/gw <color> <number of stacks> - Give wool
+/gw list - List color names
+
+Requires the Permissions plugin.
+The permission node is 'woolgiver.spawn'.

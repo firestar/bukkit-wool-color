@@ -1,7 +1,7 @@
-name: Wool Color Giver
-main: com.firestar.wool_color.wool_color
-version: 0.2
+name: Wool Giver
+main: com.firestar.WoolGiver.WoolGiver
+version: 0.3
 commands:
   gw:
-    description: Give Wool
-    usage: /<command> (wool)
+    description: Give wool of given color and quantity
+    usage: /<command> <color> <stacks>
